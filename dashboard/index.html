@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — pre-token protocols ranked by implied launch value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<a class="skip" href="#board">Skip to the board</a>
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow">Token Radar &middot; model radar-2</p>
+    <h1>Which pre-token protocol is worth farming next?</h1>
+    <p class="lede">Every protocol in the snapshot that records no token — and is not a wrapped, staked or
+    bridged product of a token that already trades — ranked by what its launch would be worth
+    if its record stayed as it is. Each row carries the steps to farm it.</p>
+    <div class="stats" id="stats"></div>
+    <p class="meta" id="meta"></p>
+  </div>
+</header>
+<main class="wrap">
+  <section class="card" id="model" aria-labelledby="model-h">
+    <h2 id="model-h">How the implied value is built</h2>
+    <p class="formula">implied value = TVL &times; comps multiple &times; growth factor &times; maturity factor &times; chain factor</p>
+    <ul class="model-list">
+      <li><b>Comps multiple.</b> The median market-cap / TVL of the protocols that already trade, in the same
+      category, read from this very snapshot — never a list of names. A sector the market already prices
+      richly prices a launch richly. Categories with fewer than 3 live tokens use the snapshot-wide median.</li>
+      <li><b>Growth factor.</b> 1 + clamped 7-day TVL change (&minus;50% to +150%) &times; 0.6.</li>
+      <li><b>Maturity factor.</b> 0.7 + up to 0.3 for up to 3 years tracked with no token (unknown age counts as 365 days).</li>
+      <li><b>Chain factor.</b> 1 + 0.03 per extra chain, up to 4 extra chains.</li>
+    </ul>
+    <details>
+      <summary>Comps multiples by category (from this snapshot)</summary>
+      <table class="mini" id="comps"><thead><tr><th>Category</th><th>Multiple</th><th>Live tokens priced</th></tr></thead><tbody></tbody></table>
+    </details>
+  </section>
+
+  <section class="card controls" aria-label="Board controls">
+    <div class="scope" role="group" aria-label="Scope">
+      <button data-scope="all" type="button">All ranked</button>
+      <button data-scope="watchlist" type="button">Watchlist</button>
+      <button data-scope="early" type="button">Early finds</button>
+    </div>
+    <label>Search <input id="q" type="search" placeholder="name or slug" autocomplete="off"></label>
+    <label>Category <select id="cat"><option value="">All categories</option></select></label>
+    <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+    <label>Sort by
+      <select id="sort">
+        <option value="implied">Implied value</option>
+        <option value="tvl">TVL</option>
+        <option value="growth">7-day growth</option>
+        <option value="age">Age (oldest first)</option>
+        <option value="name">Name A–Z</option>
+      </select>
+    </label>
+  </section>
+
+  <p class="count" id="count" aria-live="polite"></p>
+  <section id="board" aria-label="Ranked board">
+    <table class="board">
+      <thead><tr>
+        <th class="num">#</th><th>Protocol</th><th>Category</th><th>Chains</th>
+        <th class="num">TVL</th><th class="num">7d</th><th class="num">Age</th><th class="num">Implied value</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </section>
+
+  <section class="card detail" id="detail" hidden aria-labelledby="detail-h">
+    <button class="close" id="detail-close" type="button">Back to the board</button>
+    <div id="detail-body"></div>
+  </section>
+
+  <section class="card" id="live" aria-labelledby="live-h">
+    <h2 id="live-h">Already trading — not ranked</h2>
+    <p>These protocols already have a token that trades, so the board does not rank them. Their market
+    capitalisation is the market's own value, not a model's claim. They are shown because they are the
+    comps the multiples above are read from.</p>
+    <table class="mini live">
+      <thead><tr><th>Protocol</th><th>Category</th><th class="num">TVL</th><th class="num">Market cap</th><th class="num">7d</th></tr></thead>
+      <tbody id="live-rows"></tbody>
+    </table>
+  </section>
+
+  <footer class="foot">
+    <p><b>Read it honestly.</b> A protocol on this board <i>records</i> no token in DefiLlama's data — that is
+    not proof it has none, and this board does not predict whether or when any token is issued. An implied
+    value is this entry's own claim about what a launch would be worth if the protocol's record stayed as
+    it is. Farm plans are suggestions, not advice: never pay to claim an airdrop, and only ever use the
+    links a protocol itself publishes.</p>
+    <p>Data: DefiLlama api.llama.fi/protocols, frozen snapshot. Built from the sealed snapshot alone — no
+    network, no live prices. Model radar-2.</p>
+  </footer>
+</main>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
